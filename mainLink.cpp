@@ -1,0 +1,71 @@
+#include<iostream>
+#include<stdio.h>
+#include<stdlib.h>
+#include<SDL/SDL.h>
+#include<SDL/SDL_image.h>
+#include"Map.hpp"
+#include"Character.hpp"
+
+
+
+
+using namespace std;
+
+
+
+int main(int argc, char *argv[]){
+
+    SDL_Surface *screen = NULL;
+    bool keepOnGame(true);
+    SDL_Event event;
+
+
+
+
+
+    SDL_Init(SDL_INIT_VIDEO);
+    if(SDL_Init(SDL_INIT_VIDEO) == -1){
+        fprintf(stderr,"ERROR INITIALISATION SDL: %s\n", SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+
+
+    Map map1("data/mapZelda.txt",0,0); //Map loading
+  
+    //screen loading
+    screen = SDL_SetVideoMode(map1.getgridW() * map1.getwidthTile(), map1.getgridH() * map1.getheigthTile(), 32, SDL_HWSURFACE| SDL_DOUBLEBUF );
+    cout<<"derder"<<endl;
+    if(screen == NULL){
+        fprintf(stderr,"CAN NOT LOAD SCREEN: %s", SDL_GetError());
+        exit(EXIT_FAILURE);
+    }
+
+
+   
+    Character link(screen,20,28); //link loading
+
+   
+
+    SDL_EnableKeyRepeat(10, 60);
+
+
+
+    while(keepOnGame){
+        SDL_WaitEvent(&event);
+        link.event_Analysis(event,map1,&keepOnGame);
+
+        SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+        map1.print_Map(screen);
+        link.blit_Character(screen);
+
+        SDL_Flip(screen);
+    }
+
+
+
+    SDL_Quit();
+
+
+    return EXIT_SUCCESS;
+
+}

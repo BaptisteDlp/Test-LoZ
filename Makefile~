@@ -1,0 +1,30 @@
+LIBS_SDL= -lSDL
+LIBS_SDL_IM= -lSDL_image
+LIBS_SDL_T=
+
+INCLDIR	:= include
+OBJDIR	:= obj
+SRCDIR	:= src
+BINDIR	:= bin
+LIBDIR := lib
+
+DIR_UMFPACK= c:/umfpack
+INCL_UMFPACK = -I$(DIR_UMFPACK)/include
+LIBS_UMFPACK = -L$(DIR_UMFPACK)/lib -lumfpack -lamd -lsuitesparseconfig	
+
+CXXFLAGS = -std=c++11 -g -O0  $(INCL_UMFPACK)
+PROGS =  mainLink
+OBJS  = objMap.o Character.o
+SRC = Map.cpp Character.cpp
+LIBS = $(LIBS_SDL) $(LIBS_SDL_IM) $(LIBS_SDL_T)	
+
+
+all: $(PROGS)
+
+-include $(SRC:%.cpp=%.d)
+mainLink:mainLink.o $(OBJS)
+	$(CXX) -o $@ $^  $(CXXFLAGS) $(BLASLIBS) $(UMFPACKLIBS)
+
+clean: 
+	rm -rf $(OBJDIR)/*
+	rm -rf $(BINDIR)/*
